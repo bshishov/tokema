@@ -1,0 +1,23 @@
+ROOT = <S>
+S = <Intent>
+S = <S> <Intent>
+
+Intent = как <V_COUNTER> <HERO>
+Intent = как <V_COUNTER> <HERO> <ON_LANE>
+Intent = как <ON_LANE> <V_COUNTER> <HERO>
+
+V_COUNTER = контрить
+V_COUNTER = законтрить
+V_COUNTER = играть против
+
+HERO = <HERO_SNIPER>
+HERO = <HERO_STORM>
+HERO_SNIPER = снайпер | снайпера
+HERO_STORM = шторм | шторма
+
+ON_LANE = в <LANE>
+ON_LANE = на <LANE>
+
+LANE = <LANE_MID> | <LANE_SAFE>
+LANE_MID = мид | миде | центр
+LANE_SAFE = изи | легкая | легкой

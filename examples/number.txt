@@ -1,0 +1,195 @@
+ROOT = <S>
+S = <Intent>
+S = <S> <Intent>
+
+Intent = <V_TRANSFER> <AMOUNT>
+Intent = <V_TRANSFER> <AMOUNT> на <PHONE_NUMBER>
+Intent = <V_TRANSFER> <AMOUNT> с <CARD>
+Intent = <V_TRANSFER> <AMOUNT> с <CARD> на <PHONE_NUMBER>
+Intent = <V_TRANSFER> <AMOUNT> на <PHONE_NUMBER> c <CARD>
+
+V_TRANSFER = переведи
+V_TRANSFER = кинь
+V_TRANSFER = скинь
+V_TRANSFER = отправь
+
+AMOUNT = <NUMBER>
+AMOUNT = <NUMBER> <CURRENCY>
+
+NUMBER = {int}
+NUMBER = {int} <NUMBER_MOD>
+# Текстовые числа
+NUMBER = <NT>
+
+NUMBER = косарь
+NUMBER = пятиха
+NUMBER = пятихатка
+NUMBER = сотка
+NUMBER = штука
+NUMBER = чирик
+
+NUMBER_MOD = тысяч
+NUMBER_MOD = сотен
+NUMBER_MOD = миллионов
+NUMBER_MOD = миллиона
+NUMBER_MOD = ляма
+
+CURRENCY = <RUR>
+CURRENCY = <EUR>
+CURRENCY = <USD>
+
+RUR = рубли | рублей | рубасов | деревянных | руб | р. | р
+EUR = евро
+
+USD = долларов | баксов | зеленых
+
+CARD = <CARD_NAME>
+CARD = <CARD_NAME> {int}
+
+CARD_NAME = <CARD_VISA>
+CARD_NAME = <CARD_MASTER_CARD>
+CARD_NAME = <CARD_MAESTRO>
+CARD_NAME = <CARD_MIR>
+
+CARD_VISA = виза | visa
+CARD_MASTER_CARD = мастер | мастеркард | mastercard
+CARD_MAESTRO = маэстро | маестро
+CARD_MIR = мир
+
+PHONE_NUMBER_CODE = +7
+PHONE_NUMBER_CODE = 8
+
+NUMBER_GROUP = {int}
+NUMBER_GROUP = <NUMBER_GROUP> {int}
+
+PHONE_NUMBER = <PHONE_NUMBER_CODE> <NUMBER_GROUP>
+
+
+####################################
+# Для текстовых представлений чисел
+####################################
+
+# Составные
+NT = <NT3>
+NT = <NT3> <NT_THOUSAND_MOD>
+NT = <NT3> <NT_THOUSAND_MOD> <NT3>
+NT = <NT3> <NT_MIL_MOD>
+NT = <NT3> <NT_MIL_MOD> <NT3>
+NT = <NT3> <NT_MIL_MOD> <NT3> <NT_THOUSAND_MOD>
+NT = <NT3> <NT_MIL_MOD> <NT3> <NT_THOUSAND_MOD> <NT3>
+
+# Модификаторы разрядов
+NT_THOUSAND_MOD = тысяч
+NT_THOUSAND_MOD = тысячи
+NT_MIL_MOD = миллионов
+NT_MIL_MOD = миллиона
+
+# для контсрукций вида "девятьсот девяноста девять"  (<1000)
+# 9, 13, 19
+NT3 = <NT_LESS_20>
+# 90
+NT3 = <NT_ORDER_2>
+# 900
+NT3 = <NT_ORDER_3>
+# 99
+NT3 = <NT_ORDER_2> <NT_ORDER_1>
+# 990
+NT3 = <NT_ORDER_3> <NT_ORDER_2>
+# 909, 913
+NT3 = <NT_ORDER_3> <NT_LESS_20>
+# 999
+NT3 = <NT_ORDER_3> <NT_ORDER_2> <NT_ORDER_1>
+
+# 1..9
+NT_ORDER_1 = <NT_1>
+NT_ORDER_1 = <NT_2>
+NT_ORDER_1 = <NT_3>
+NT_ORDER_1 = <NT_4>
+NT_ORDER_1 = <NT_5>
+NT_ORDER_1 = <NT_6>
+NT_ORDER_1 = <NT_7>
+NT_ORDER_1 = <NT_9>
+
+# 20, 30... 90
+NT_ORDER_2 = <NT_20>
+NT_ORDER_2 = <NT_30>
+NT_ORDER_2 = <NT_40>
+NT_ORDER_2 = <NT_50>
+NT_ORDER_2 = <NT_60>
+NT_ORDER_2 = <NT_70>
+NT_ORDER_2 = <NT_80>
+NT_ORDER_2 = <NT_90>
+
+NT_ORDER_3 = <NT_100>
+NT_ORDER_3 = <NT_200>
+NT_ORDER_3 = <NT_300>
+NT_ORDER_3 = <NT_400>
+NT_ORDER_3 = <NT_500>
+NT_ORDER_3 = <NT_600>
+NT_ORDER_3 = <NT_700>
+NT_ORDER_3 = <NT_800>
+NT_ORDER_3 = <NT_900>
+
+NT_LESS_20 = <NT_1>
+NT_LESS_20 = <NT_2>
+NT_LESS_20 = <NT_3>
+NT_LESS_20 = <NT_4>
+NT_LESS_20 = <NT_5>
+NT_LESS_20 = <NT_6>
+NT_LESS_20 = <NT_7>
+NT_LESS_20 = <NT_8>
+NT_LESS_20 = <NT_9>
+NT_LESS_20 = <NT_10>
+NT_LESS_20 = <NT_11>
+NT_LESS_20 = <NT_12>
+NT_LESS_20 = <NT_13>
+NT_LESS_20 = <NT_14>
+NT_LESS_20 = <NT_15>
+NT_LESS_20 = <NT_16>
+NT_LESS_20 = <NT_17>
+NT_LESS_20 = <NT_18>
+NT_LESS_20 = <NT_19>
+
+NT_1 = один
+NT_1 = одна
+NT_1 = одну
+NT_2 = два
+NT_2 = две
+NT_3 = три
+NT_3 = три
+NT_4 = четыре
+NT_5 = пять
+NT_5 = пяток
+NT_6 = шесть
+NT_7 = семь
+NT_8 = восемь
+NT_9 = девять
+NT_10 = десять
+NT_11 = одинадцать
+NT_12 = двенадцать
+NT_13 = тринадцать
+NT_14 = четырнадцать
+NT_15 = пятнадцать
+NT_16 = шестнадцать
+NT_17 = семнадцать
+NT_18 = восемнадцать
+NT_19 = девятнадцать
+
+NT_20 = двадцать
+NT_30 = тридцать
+NT_40 = сорок
+NT_50 = пятьдесят
+NT_60 = шестьдесят
+NT_70 = семьдесят
+NT_80 = восемьдесят
+NT_90 = девяноста
+
+NT_100 = сто
+NT_200 = двести
+NT_300 = триста
+NT_400 = четыреста
+NT_500 = пятьсот
+NT_600 = шестьсот
+NT_700 = семьсот
+NT_800 = восемьсот
+NT_900 = девятсот
