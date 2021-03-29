@@ -111,8 +111,8 @@ class IntResolver(Resolver):
 
     def resolve(self, token):
         try:
-            int(token)
-            return self.doc
+            value = int(token)
+            return self.doc, value
         except (ValueError, TypeError):
             return None
 
@@ -127,8 +127,8 @@ class FloatResolver(Resolver):
 
     def resolve(self, token):
         try:
-            float(token)
-            return self.doc
+            value = float(token)
+            return self.doc, value
         except (ValueError, TypeError):
             return None
 

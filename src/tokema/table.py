@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Mapping, Dict, List, Set, Iterable, Union
+from typing import Optional, Tuple, Mapping, Dict, List, Set, Iterable, Union, Any
 from collections import defaultdict
 
 from .grammar import Rule, TerminalQuery, ReferenceQuery, Query
@@ -113,32 +113,6 @@ class Resolver:
 
 
 class ParsingTable:
-    def add_action(self, state: int, terminal_query: TerminalQuery, action: Action):
-        raise NotImplementedError
-
-    def add_goto(self, state: int, variable: str, next_state: int):
-        raise NotImplementedError
-
-    def get_action(self, state: int, input_token) -> Optional[Action]:
-        raise NotImplementedError
-
-    def get_goto_state(self, state: int, variable: str) -> Optional[int]:
-        raise NotImplementedError
-
-    def get_shift_state(self, state: int, look_ahead_token) -> Optional[int]:
-        action = self.get_action(state, look_ahead_token)
-        if isinstance(action, ShiftToStateAction):
-            return action.state
-        return None
-
-    def get_rule_reduction(self, state: int, look_ahead_token) -> Optional[Rule]:
-        action = self.get_action(state, look_ahead_token)
-        if isinstance(action, ReduceByRuleAction):
-            return action.rule
-        return None
-
-
-class QLRTable(ParsingTable):
     def __init__(self, resolvers: List[Resolver]):
         self._goto: Mapping[int, Dict[str, int]] = defaultdict(dict)
         self._resolvers = resolvers
@@ -153,17 +127,32 @@ class QLRTable(ParsingTable):
     def add_goto(self, state: int, variable: str, next_state: int):
         self._goto[state][variable] = next_state
 
-    def get_action(self, state: int, input_token) -> Optional[Action]:
-        entry = None
+    def get_action(self, state: int, input_token) -> Tuple[Optional[Action], Any]:
+        # Calling each resolver and ask them if they can handle give input token
         for resolver in self._resolvers:
             entry = resolver.resolve(input_token)
             if entry is not None:
-                break
-        if entry:
-            return entry.get(state)
+                meta = None
+                if isinstance(entry, tuple):
+                    # Extracting additional metadata information from the resolver
+                    entry, meta = entry
+                return entry.get(state), meta
+        return None, None
 
     def get_goto_state(self, state: int, variable: str) -> Optional[int]:
         return self._goto[state].get(variable)
+
+    def get_shift_state(self, state: int, look_ahead_token) -> Tuple[Optional[int], Any]:
+        action, meta = self.get_action(state, look_ahead_token)
+        if isinstance(action, ShiftToStateAction):
+            return action.state, meta
+        return None, None
+
+    def get_rule_reduction(self, state: int, look_ahead_token) -> Optional[Rule]:
+        action, _ = self.get_action(state, look_ahead_token)
+        if isinstance(action, ReduceByRuleAction):
+            return action.rule
+        return None
 
 
 def expand_items(items: List[Item], rules: List[Rule], idx: int = -1):
@@ -286,7 +275,7 @@ def build_parsing_table(
     expand_states(states, rules, transitions)
 
     # Create terminal token resolution table
-    table: ParsingTable = QLRTable(resolvers=list(resolvers))
+    table = ParsingTable(resolvers=list(resolvers))
 
     if verbose:
         print('States:')

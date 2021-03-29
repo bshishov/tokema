@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, List, Iterable, Union, Any
+from typing import Optional, List, Iterable, Union
 from itertools import chain
 
 from .grammar import Rule
@@ -8,17 +8,52 @@ from .table import ParsingTable
 
 __all__ = [
     'parse',
+    'Symbol',
     'ParseNode',
     'print_parse_node'
 ]
 
 
+class Symbol:
+    """Input token with additional parsing-related information
+
+    :param position: Token position index
+    :param value: Original token value
+    :param meta: Addition meta information from resolver
+    """
+    __slots__ = 'position', 'value', 'meta'
+
+    def __init__(self, value, position: int, meta=None):
+        self.position = position
+        self.value = value
+        self.meta = meta
+
+    def __str__(self):
+        return str(self.value)
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.value!r}, {self.position!r}, {self.meta!r})'
+
+
 class ParseNode:
     __slots__ = 'rule', 'args'
 
-    def __init__(self, rule: Rule, args: Tuple):
+    def __init__(self, rule: Rule, args: List[Union['ParseNode', Symbol]]):
+        """
+        :param rule: Rule used to produce this node
+        :param args: Symbols that matched rule queries
+        """
         self.rule = rule
         self.args = args
+
+    def __len__(self):
+        return len(self.args)
+
+    def __getitem__(self, item):
+        return self.args.__getitem__(item)
+
+    def __iter__(self):
+        return self.args.__iter__()
 
     def __str__(self):
         args_fmt = ', '.join(str(a) for a in self.args)
@@ -38,7 +73,7 @@ class _Node:
             state: int,
             start_pos: int,
             end_pos: int,
-            symbol: Union[Any, ParseNode, None],
+            symbol: Union[Symbol, ParseNode, None],
             parent: Optional['_Node'] = None,
             skipped_symbols: int = 0,
     ):
@@ -112,11 +147,15 @@ def parse(
 
         # Shift phase
         for node in inactive_nodes:
-            shift_to_state = table.get_shift_state(node.state, look_ahead_token)
+            shift_to_state, meta = table.get_shift_state(node.state, look_ahead_token)
             if shift_to_state:
                 new_node = _Node(
                     parent=node,
-                    symbol=look_ahead_token,
+                    symbol=Symbol(
+                        value=look_ahead_token,
+                        position=look_ahead_token_position,
+                        meta=meta
+                    ),
                     state=shift_to_state,
                     start_pos=look_ahead_token_position,
                     end_pos=look_ahead_token_position + 1,
@@ -147,7 +186,7 @@ def parse(
                 next_state = table.get_goto_state(production_root.state, rule.production)
                 new_node = _Node(
                     state=next_state,
-                    symbol=ParseNode(rule, tuple(production_args)),
+                    symbol=ParseNode(rule=rule, args=production_args),
                     parent=production_root,
                     start_pos=production_root.start_pos,
                     end_pos=node.end_pos,

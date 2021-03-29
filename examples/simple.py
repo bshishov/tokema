@@ -21,3 +21,9 @@ results = parse(tokens, table)
 for result in results:
     # Here you can access the parsed AST (abstract syntax tree)
     print(result)  # ROOT(EXPR(3.1415, +, 4e-10))
+
+    # EXPR is the first child of ROOT
+    expr = result[0]
+
+    # Convert each value to a float and make sure that result is actually correct
+    assert float(expr[0].value) + float(expr[2].value) == 3.1415 + 4e-10
