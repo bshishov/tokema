@@ -5,7 +5,7 @@ with open('README.md', 'r') as f:
 
 setup(
     name='tokema',
-    version='0.0.1',
+    version='0.0.2',
     description='Token matching parser',
     url='https://github.com/bshishov/tokema',
     author='Boris Shishov',
